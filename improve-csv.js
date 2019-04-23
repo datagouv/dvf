@@ -1,5 +1,6 @@
 #!/usr/bin/env node --max-old-space-size=4096
 /* eslint camelcase: off */
+require('dotenv').config()
 
 const {join} = require('path')
 const {createReadStream} = require('fs')
@@ -11,9 +12,12 @@ const {createGunzip} = require('gunzip-stream')
 const {groupBy} = require('lodash')
 const pumpify = require('pumpify').obj
 const getStream = require('get-stream')
+const centroid = require('@turf/centroid').default
+const truncate = require('@turf/truncate').default
 const {writeCsv} = require('./lib/csv')
 const {getCulturesMap, getCulturesSpecialesMap} = require('./lib/cultures')
 const {getDateMutation, getIdParcelle, getCodeCommune, getCodePostal} = require('./lib/parse')
+const {getParcellesCommune} = require('./lib/parcelles')
 const {getCodeDepartement} = require('./lib/util')
 
 function convertRow(row, {culturesMap, culturesSpecialesMap}) {
@@ -52,7 +56,9 @@ function convertRow(row, {culturesMap, culturesSpecialesMap}) {
     nature_culture: row['Nature culture'] in culturesMap ? culturesMap[row['Nature culture']] : '',
     code_nature_culture_speciale: row['Nature culture speciale'],
     nature_culture_speciale: row['Nature culture speciale'] in culturesSpecialesMap ? culturesSpecialesMap[row['Nature culture speciale']] : '',
-    surface_terrain: row['Surface terrain']
+    surface_terrain: row['Surface terrain'],
+    longitude: '',
+    latitude: ''
   }
 }
 
@@ -63,6 +69,10 @@ async function main() {
   const culturesSpecialesMap = await getCulturesSpecialesMap()
 
   await bluebird.each(millesimes, async millesime => {
+    console.log(`Millésime ${millesime}`)
+
+    console.log('Chargement des données')
+
     const rows = await getStream.array(pumpify(
       createReadStream(join(__dirname, 'data', `valeursfoncieres-${millesime}.txt.gz`)),
       createGunzip(),
@@ -72,10 +82,32 @@ async function main() {
       }})
     ))
 
+    /* Géocodage à la parcelle */
+
+    console.log('Géocodage à la parcelle')
+
+    const communesRows = groupBy(rows, 'code_commune')
+    await bluebird.map(Object.keys(communesRows), async codeCommune => {
+      const communeRows = communesRows[codeCommune]
+      const parcelles = await getParcellesCommune(codeCommune)
+
+      communeRows.forEach(row => {
+        if (parcelles && row.id_parcelle in parcelles) {
+          const parcelle = parcelles[row.id_parcelle]
+          const [lon, lat] = truncate(centroid(parcelle), {precision: 6}).geometry.coordinates
+          row.longitude = lon
+          row.latitude = lat
+        }
+      })
+    }, {concurrency: 8})
+
+    /* Export des données à la commune */
+
+    console.log('Export des données à la commune')
+
     const communesGroupedRows = groupBy(rows, 'code_commune')
 
     await bluebird.map(Object.keys(communesGroupedRows), async codeCommune => {
-      console.log(codeCommune)
       const communeRows = communesGroupedRows[codeCommune]
       const codeDepartement = getCodeDepartement(codeCommune)
       const departementPath = join(__dirname, 'dist', millesime, 'communes', codeDepartement)
@@ -83,10 +115,13 @@ async function main() {
       await writeCsv(join(departementPath, `${codeCommune}.csv`), communeRows)
     }, {concurrency: 8})
 
+    /* Export des données au département */
+
+    console.log('Export des données au département')
+
     const departementsGroupedRows = groupBy(rows, 'code_departement')
 
     await bluebird.map(Object.keys(departementsGroupedRows), async codeDepartement => {
-      console.log(codeDepartement)
       const departementRows = departementsGroupedRows[codeDepartement]
       const departementsPath = join(__dirname, 'dist', millesime, 'departements')
       await ensureDir(departementsPath)

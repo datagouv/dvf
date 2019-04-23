@@ -1,4 +1,4 @@
-#!/usr/bin/env node --max-old-space-size=4096
+#!/usr/bin/env node --max-old-space-size=8192
 /* eslint camelcase: off */
 require('dotenv').config()
 

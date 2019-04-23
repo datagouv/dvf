@@ -1,0 +1,35 @@
+{
+  "name": "@etalab/dvf",
+  "version": "0.0.0",
+  "description": "Scripts permettant de manipuler les données DVF",
+  "main": "index.js",
+  "repository": "https://github.com/etalab/dvf",
+  "author": "Jérôme Desboeufs <jerome.desboeufs@data.gouv.fr>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "lint": "xo",
+    "improve-csv": "node --max-old-space-size=4096 improve-csv"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.4",
+    "csv-parser": "^2.2.0",
+    "csv-write-stream": "^2.0.0",
+    "fs-extra": "^7.0.1",
+    "get-stream": "^5.1.0",
+    "gunzip-stream": "^1.0.1",
+    "into-stream": "^5.1.0",
+    "lodash": "^4.17.11",
+    "pumpify": "^1.5.1"
+  },
+  "devDependencies": {
+    "xo": "^0.24.0"
+  },
+  "xo": {
+    "semicolon": false,
+    "space": "2"
+  },
+  "engines": {
+    "node": ">= 10"
+  }
+}

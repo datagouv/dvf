@@ -127,6 +127,14 @@ async function main() {
       await ensureDir(departementsPath)
       await writeCsv(join(departementsPath, `${codeDepartement}.csv.gz`), departementRows)
     }, {concurrency: 8})
+
+    /* Export des données complet */
+
+    console.log('Export complet des données')
+
+    const millesimePath = join(__dirname, 'dist', millesime)
+    await ensureDir(millesimePath)
+    await writeCsv(join(millesimePath, 'full.csv.gz'), rows)
   })
 }
 

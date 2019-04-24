@@ -8,9 +8,10 @@ Ces fichiers sont proposés pour faciliter la réutilisation des données DVF.
 - Renommage des colonnes pour un traitement informatique plus facile
 - Suppression des colonnes non fournies dans la diffusion DVF
 - Jointure avec les tables fournies en documentation
-- Normalisation des valeurs monétaires (point comme séparateur décimal)
+- Normalisation des valeurs décimales (point comme séparateur décimal)
 - Normalisation des codes postaux (5 caractères)
 - Normalisation des codes INSEE
+- Normalisation des codes voie (FANTOIR) (4 caractères)
 - Création d'un identifiant de parcelle compatible avec les fichiers cadastraux proposés par Etalab
 - Date de mutation au format ISO-8601
 - Géocodage latitude/longitude à la parcelle en coordonnées WGS-84
@@ -26,6 +27,7 @@ Pour la description étendue de la signification des champs, nous vous recommand
 | `valeur_fonciere` | Valeur foncière (séparateur décimal = point) |
 | `adresse_numero` | Numéro de l'adresse |
 | `adresse_suffixe` | Suffixe du numéro de l'adresse (B, T, Q) |
+| `adresse_code_voie` | Code FANTOIR de la voie (4 caractères) |
 | `adresse_nom_voie` | Nom de la voie de l'adresse |
 | `code_postal` | Code postal (5 caractères) |
 | `code_commune` | Code commune INSEE (5 caractères) |

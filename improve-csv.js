@@ -16,7 +16,7 @@ const centroid = require('@turf/centroid').default
 const truncate = require('@turf/truncate').default
 const {writeCsv} = require('./lib/csv')
 const {getCulturesMap, getCulturesSpecialesMap} = require('./lib/cultures')
-const {getDateMutation, getIdParcelle, getCodeCommune, getCodePostal} = require('./lib/parse')
+const {getDateMutation, getIdParcelle, getCodeCommune, getCodePostal, parseFloat} = require('./lib/parse')
 const {getParcellesCommune} = require('./lib/parcelles')
 const {getCodeDepartement} = require('./lib/util')
 
@@ -26,7 +26,7 @@ function convertRow(row, {culturesMap, culturesSpecialesMap}) {
   return {
     date_mutation: getDateMutation(row),
     nature_mutation: row['Nature mutation'],
-    valeur_fonciere: Number.parseFloat(row['Valeur fonciere'].replace(',', '.')) || '',
+    valeur_fonciere: parseFloat(row['Valeur fonciere']) || '',
     adresse_numero: row['No voie'],
     adresse_suffixe: row['B/T/Q'],
     adresse_nom_voie: [row['Type de voie'], row.Voie].filter(Boolean).join(' '),
@@ -50,13 +50,13 @@ function convertRow(row, {culturesMap, culturesSpecialesMap}) {
     nombre_lots: row['Nombre de lots'],
     code_type_local: row['Code type local'],
     type_local: row['Type local'],
-    surface_reelle_bati: row['Surface reelle bati'],
+    surface_reelle_bati: parseFloat(row['Surface reelle bati']) || '',
     nombre_pieces_principales: row['Nombre pieces principales'],
     code_nature_culture: row['Nature culture'],
     nature_culture: row['Nature culture'] in culturesMap ? culturesMap[row['Nature culture']] : '',
     code_nature_culture_speciale: row['Nature culture speciale'],
     nature_culture_speciale: row['Nature culture speciale'] in culturesSpecialesMap ? culturesSpecialesMap[row['Nature culture speciale']] : '',
-    surface_terrain: row['Surface terrain'],
+    surface_terrain: parseFloat(row['Surface terrain']) || '',
     longitude: '',
     latitude: ''
   }

@@ -1,6 +1,6 @@
 # Fichiers CSV retravaillés par Etalab
 
-Ces fichiers sont proposés pour faciliter la réutilisation des données DVF.
+Ces [fichiers](http://cadastre.data.gouv.fr/data/hackathon-dgfip-dvf/contrib/etalab-csv) sont proposés pour faciliter la réutilisation des données DVF.
 
 ## Améliorations par rapport aux fichiers bruts
 

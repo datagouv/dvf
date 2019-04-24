@@ -25,6 +25,7 @@ function convertRow(row, {culturesMap, culturesSpecialesMap}) {
 
   return {
     date_mutation: getDateMutation(row),
+    numero_disposition: row['No disposition'],
     nature_mutation: row['Nature mutation'],
     valeur_fonciere: parseFloat(row['Valeur fonciere']) || '',
     adresse_numero: row['No voie'],

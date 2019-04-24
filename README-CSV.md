@@ -24,6 +24,7 @@ Pour la description étendue de la signification des champs, nous vous recommand
 | Nom du champ | Commentaire |
 | --- | --- |
 | `date_mutation` | Date de la mutation au format ISO-8601 (YYYY-MM-DD) |
+| `numero_disposition` | Numéro de disposition |
 | `valeur_fonciere` | Valeur foncière (séparateur décimal = point) |
 | `adresse_numero` | Numéro de l'adresse |
 | `adresse_suffixe` | Suffixe du numéro de l'adresse (B, T, Q) |

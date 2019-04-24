@@ -18,7 +18,7 @@ Ces fichiers sont proposés pour faciliter la réutilisation des données DVF.
 
 ## Schéma
 
-Pour la description étendue de la signification des champs, nous vous recommandons de consulter la notice officielle.
+Pour la description étendue de la signification des champs, nous vous recommandons de consulter la [notice officielle](https://cadastre.data.gouv.fr/data/hackathon-dgfip-dvf/notice-descriptive-du-fichier-dvf.pdf).
 
 | Nom du champ | Commentaire |
 | --- | --- |

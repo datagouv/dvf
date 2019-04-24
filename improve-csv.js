@@ -30,7 +30,7 @@ function convertRow(row, {culturesMap, culturesSpecialesMap}) {
     adresse_numero: row['No voie'],
     adresse_suffixe: row['B/T/Q'],
     adresse_nom_voie: [row['Type de voie'], row.Voie].filter(Boolean).join(' '),
-    adresse_code_voie: row['Code voie'],
+    adresse_code_voie: row['Code voie'] ? row['Code voie'].padStart(4, '0') : '',
     code_postal: getCodePostal(row) || '',
     code_commune: codeCommune,
     nom_commune: row.Commune,

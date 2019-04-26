@@ -130,7 +130,7 @@ async function main() {
     if (process.env.DISABLE_GEOCODING !== '1') {
       console.log('Géocodage à la parcelle')
 
-      const communesRows = groupBy(rows, 'code_commune')
+      const communesRows = groupBy(rows, r => r.id_parcelle.substr(0, 5))
       await bluebird.map(Object.keys(communesRows), async codeCommune => {
         const communeRows = communesRows[codeCommune]
         const parcelles = await getParcellesCommune(codeCommune)

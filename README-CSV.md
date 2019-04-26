@@ -36,11 +36,11 @@ Pour la description étendue de la signification des champs, nous vous recommand
 | `code_postal` | Code postal (5 caractères) |
 | `code_commune` | Code commune INSEE (5 caractères) |
 | `nom_commune` | Nom de la commune (tel que fourni) |
-| `ancien_code_commune` | Ancien code commune INSEE (si différent au moment de la mutation) |
-| `ancien_nom_commune` | Ancien nom de la commune (si différent au moment de la mutation) |
+| `ancien_code_commune` | Ancien code commune INSEE (si différent au moment de la mutation) |
+| `ancien_nom_commune` | Ancien nom de la commune (si différent au moment de la mutation) |
 | `code_departement` | Code département INSEE (2 ou 3 caractères) |
 | `id_parcelle` | Identifiant de parcelle (14 caractères) |
-| `ancien_id_parcelle` | Ancien identifiant de parcelle (si différent au moment de la mutation) |
+| `ancien_id_parcelle` | Ancien identifiant de parcelle (si différent au moment de la mutation) |
 | `numero_volume` | Numéro de volume |
 | `lot_1_numero` | Numéro du lot 1 |
 | `lot_1_surface_carrez` | Surface Carrez du lot 1 |

@@ -24,6 +24,7 @@ function convertRow(row, {culturesMap, culturesSpecialesMap}) {
   const codeCommune = getCodeCommune(row)
 
   return {
+    id_mutation: '',
     date_mutation: getDateMutation(row),
     numero_disposition: row['No disposition'],
     nature_mutation: row['Nature mutation'],
@@ -74,12 +75,26 @@ async function main() {
 
     console.log('Chargement des données')
 
+    let valeurFonciere
+    let dateMutation
+    let idMutationSeq = 0
+
     const rows = await getStream.array(pumpify(
       createReadStream(join(__dirname, 'data', `valeursfoncieres-${millesime}.txt.gz`)),
       createGunzip(),
       csvParser({separator: '|'}),
       new Transform({objectMode: true, transform(row, enc, cb) {
-        cb(null, convertRow(row, {culturesMap, culturesSpecialesMap}))
+        const converted = convertRow(row, {culturesMap, culturesSpecialesMap})
+
+        if (converted.valeur_fonciere !== valeurFonciere || converted.date_mutation !== dateMutation) {
+          idMutationSeq++
+          valeurFonciere = converted.valeur_fonciere
+          dateMutation = converted.date_mutation
+        }
+
+        converted.id = `${millesime}-${idMutationSeq}`
+
+        cb(null, converted)
       }})
     ))
 

@@ -5,6 +5,7 @@ Ces [fichiers](http://cadastre.data.gouv.fr/data/hackathon-dgfip-dvf/contrib/eta
 ## Améliorations par rapport aux fichiers bruts
 
 - CSV avec séparateur virgule et encodage UTF-8
+- Création d'un identifiant de mutation
 - Renommage des colonnes pour un traitement informatique plus facile
 - Suppression des colonnes non fournies dans la diffusion DVF
 - Jointure avec les tables fournies en documentation
@@ -23,6 +24,7 @@ Pour la description étendue de la signification des champs, nous vous recommand
 
 | Nom du champ | Commentaire |
 | --- | --- |
+| `id_mutation` | Identifiant de mutation |
 | `date_mutation` | Date de la mutation au format ISO-8601 (YYYY-MM-DD) |
 | `numero_disposition` | Numéro de disposition |
 | `valeur_fonciere` | Valeur foncière (séparateur décimal = point) |

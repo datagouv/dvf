@@ -119,7 +119,7 @@ async function main() {
           dateMutation = converted.date_mutation
         }
 
-        converted.id = `${millesime}-${idMutationSeq}`
+        converted.id_mutation = `${millesime}-${idMutationSeq}`
 
         cb(null, converted)
       }})

@@ -14,6 +14,7 @@ Ces [fichiers](http://cadastre.data.gouv.fr/data/hackathon-dgfip-dvf/contrib/eta
 - Normalisation des codes INSEE
 - Normalisation des codes voie (FANTOIR) (4 caractères)
 - Création d'un identifiant de parcelle compatible avec les fichiers cadastraux proposés par Etalab
+- Alignement avec le Code Officiel Géographique en vigueur
 - Date de mutation au format ISO-8601
 - Géocodage latitude/longitude à la parcelle en coordonnées WGS-84
 - Fourniture des fichiers au département ou à la commune
@@ -35,8 +36,11 @@ Pour la description étendue de la signification des champs, nous vous recommand
 | `code_postal` | Code postal (5 caractères) |
 | `code_commune` | Code commune INSEE (5 caractères) |
 | `nom_commune` | Nom de la commune (tel que fourni) |
+| `ancien_code_commune` | Ancien code commune INSEE (si différent au moment de la mutation) |
+| `ancien_nom_commune` | Ancien nom de la commune (si différent au moment de la mutation) |
 | `code_departement` | Code département INSEE (2 ou 3 caractères) |
 | `id_parcelle` | Identifiant de parcelle (14 caractères) |
+| `ancien_id_parcelle` | Ancien identifiant de parcelle (si différent au moment de la mutation) |
 | `numero_volume` | Numéro de volume |
 | `lot_1_numero` | Numéro du lot 1 |
 | `lot_1_surface_carrez` | Surface Carrez du lot 1 |

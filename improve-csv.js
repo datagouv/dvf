@@ -100,22 +100,24 @@ async function main() {
 
     /* Géocodage à la parcelle */
 
-    console.log('Géocodage à la parcelle')
+    if (process.env.DISABLE_GEOCODING !== '1') {
+      console.log('Géocodage à la parcelle')
 
-    const communesRows = groupBy(rows, 'code_commune')
-    await bluebird.map(Object.keys(communesRows), async codeCommune => {
-      const communeRows = communesRows[codeCommune]
-      const parcelles = await getParcellesCommune(codeCommune)
+      const communesRows = groupBy(rows, 'code_commune')
+      await bluebird.map(Object.keys(communesRows), async codeCommune => {
+        const communeRows = communesRows[codeCommune]
+        const parcelles = await getParcellesCommune(codeCommune)
 
-      communeRows.forEach(row => {
-        if (parcelles && row.id_parcelle in parcelles) {
-          const parcelle = parcelles[row.id_parcelle]
-          const [lon, lat] = truncate(centroid(parcelle), {precision: 6}).geometry.coordinates
-          row.longitude = lon
-          row.latitude = lat
-        }
-      })
-    }, {concurrency: 8})
+        communeRows.forEach(row => {
+          if (parcelles && row.id_parcelle in parcelles) {
+            const parcelle = parcelles[row.id_parcelle]
+            const [lon, lat] = truncate(centroid(parcelle), {precision: 6}).geometry.coordinates
+            row.longitude = lon
+            row.latitude = lat
+          }
+        })
+      }, {concurrency: 8})
+    }
 
     /* Export des données à la commune */
 

@@ -16,16 +16,23 @@ const centroid = require('@turf/centroid').default
 const truncate = require('@turf/truncate').default
 const {writeCsv} = require('./lib/csv')
 const {getCulturesMap, getCulturesSpecialesMap} = require('./lib/cultures')
-const {getDateMutation, getIdParcelle, getCodeCommune, getCodePostal, parseFloat} = require('./lib/parse')
+const {getDateMutation, getIdParcelle, getCodeCommune, getPrefixeSection, getCodePostal, parseFloat} = require('./lib/parse')
 const {getParcellesCommune} = require('./lib/parcelles')
-const {getCodeDepartement} = require('./lib/util')
+const {getCommune, getCommuneActuelle, getCodeDepartement, getCommuneFromCadastre} = require('./lib/recog')
+
+const DATE_ALIGNEMENT = '2019-01-01'
+const DATE_ALIGNEMENT_CADASTRE = '2018-01-01'
 
 function convertRow(row, {culturesMap, culturesSpecialesMap}) {
+  const dateMutation = getDateMutation(row)
   const codeCommune = getCodeCommune(row)
+  const commune = getCommune(codeCommune, dateMutation)
+  const communeActuelle = getCommuneActuelle(commune, DATE_ALIGNEMENT) || (console.log(`Probable dé-fusion : ${commune.nom}`) || commune)
+  const idParcelle = getIdParcelle(row)
 
-  return {
+  const converted = {
     id_mutation: '',
-    date_mutation: getDateMutation(row),
+    date_mutation: dateMutation,
     numero_disposition: row['No disposition'],
     nature_mutation: row['Nature mutation'],
     valeur_fonciere: parseFloat(row['Valeur fonciere']) || '',
@@ -34,10 +41,13 @@ function convertRow(row, {culturesMap, culturesSpecialesMap}) {
     adresse_nom_voie: [row['Type de voie'], row.Voie].filter(Boolean).join(' '),
     adresse_code_voie: row['Code voie'] ? row['Code voie'].padStart(4, '0') : '',
     code_postal: getCodePostal(row) || '',
-    code_commune: codeCommune,
-    nom_commune: row.Commune,
-    code_departement: getCodeDepartement(codeCommune),
-    id_parcelle: getIdParcelle(row),
+    code_commune: communeActuelle.code,
+    nom_commune: communeActuelle.nom,
+    code_departement: getCodeDepartement(communeActuelle.code),
+    ancien_code_commune: '',
+    ancien_nom_commune: '',
+    id_parcelle: idParcelle,
+    ancien_id_parcelle: '',
     numero_volume: row['No Volume'],
     lot1_numero: row['1er lot'],
     lot1_surface_carrez: parseFloat(row['Surface Carrez du 1er lot']) || '',
@@ -62,6 +72,23 @@ function convertRow(row, {culturesMap, culturesSpecialesMap}) {
     longitude: '',
     latitude: ''
   }
+
+  if (commune !== communeActuelle) {
+    converted.ancien_code_commune = commune.code
+    converted.ancien_nom_commune = commune.nom
+  }
+
+  if (commune.code !== communeActuelle.code) {
+    const ancienneCommune = getCommuneFromCadastre(codeCommune, getPrefixeSection(row))
+    const communeActuelleCadastre = getCommuneActuelle(ancienneCommune, DATE_ALIGNEMENT_CADASTRE)
+
+    if (commune.code !== communeActuelleCadastre.code) {
+      converted.ancien_id_parcelle = idParcelle
+      converted.id_parcelle = `${communeActuelle.code}${commune.code.substr(2, 3)}${idParcelle.substr(8)}`
+    }
+  }
+
+  return converted
 }
 
 const millesimes = ['2018', '2017', '2016', '2015', '2014']

@@ -84,7 +84,7 @@ function convertRow(row, {culturesMap, culturesSpecialesMap}) {
 
     if (commune.code !== communeActuelleCadastre.code) {
       converted.ancien_id_parcelle = idParcelle
-      converted.id_parcelle = `${communeActuelle.code}${commune.code.slice(2, 3)}${idParcelle.slice(8)}`
+      converted.id_parcelle = `${communeActuelle.code}${commune.code.substr(2, 3)}${idParcelle.substr(8)}`
     }
   }
 
@@ -130,7 +130,7 @@ async function main() {
     if (process.env.DISABLE_GEOCODING !== '1') {
       console.log('Géocodage à la parcelle')
 
-      const communesRows = groupBy(rows, r => r.id_parcelle.slice(0, 5))
+      const communesRows = groupBy(rows, r => r.id_parcelle.substr(0, 5))
       await bluebird.map(Object.keys(communesRows), async codeCommune => {
         const communeRows = communesRows[codeCommune]
         const parcelles = await getParcellesCommune(codeCommune)

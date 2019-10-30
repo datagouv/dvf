@@ -12,7 +12,7 @@
     "improve-csv": "node --max-old-space-size=8192 improve-csv"
   },
   "dependencies": {
-    "@etalab/decoupage-administratif": "^0.5.0",
+    "@etalab/decoupage-administratif": "^0.6.2",
     "@turf/centroid": "^6.0.2",
     "@turf/truncate": "^6.0.1",
     "bluebird": "^3.7.1",

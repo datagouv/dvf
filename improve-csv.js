@@ -21,7 +21,7 @@ const {getParcellesCommune} = require('./lib/parcelles')
 const {getCommune, getCommuneActuelle, getCodeDepartement, getCommuneFromCadastre} = require('./lib/recog')
 
 const DATE_ALIGNEMENT = '2019-01-01'
-const DATE_ALIGNEMENT_CADASTRE = '2018-01-01'
+const DATE_ALIGNEMENT_CADASTRE = '2019-01-01'
 
 function convertRow(row, {culturesMap, culturesSpecialesMap}) {
   const dateMutation = getDateMutation(row)
@@ -91,7 +91,7 @@ function convertRow(row, {culturesMap, culturesSpecialesMap}) {
   return converted
 }
 
-const millesimes = ['2018', '2017', '2016', '2015', '2014']
+const millesimes = ['2019', '2018', '2017', '2016', '2015', '2014']
 
 async function main() {
   const culturesMap = await getCulturesMap()

@@ -136,7 +136,12 @@ async function main() {
         const parcelles = await getParcellesCommune(codeCommune)
 
         communeRows.forEach(row => {
-          if (parcelles && row.id_parcelle in parcelles) {
+          if (row.ancien_id_parcelle in parcelles) {
+            row.id_parcelle = row.ancien_id_parcelle
+            row.ancien_id_parcelle = undefined
+          }
+
+          if (row.id_parcelle in parcelles) {
             const parcelle = parcelles[row.id_parcelle]
             const [lon, lat] = truncate(centroid(parcelle), {precision: 6}).geometry.coordinates
             row.longitude = lon

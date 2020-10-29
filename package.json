@@ -12,18 +12,18 @@
     "improve-csv": "node --max-old-space-size=8192 improve-csv"
   },
   "dependencies": {
-    "@etalab/decoupage-administratif": "^0.6.2",
+    "@etalab/decoupage-administratif": "^0.8.0",
     "@turf/centroid": "^6.0.2",
     "@turf/truncate": "^6.0.1",
-    "bluebird": "^3.7.1",
-    "csv-parser": "^2.3.1",
+    "bluebird": "^3.7.2",
+    "csv-parser": "^2.3.3",
     "csv-write-stream": "^2.0.0",
     "dotenv": "^8.2.0",
-    "fs-extra": "^8.1.0",
-    "get-stream": "^5.1.0",
+    "fs-extra": "^9.0.1",
+    "get-stream": "^6.0.0",
     "gunzip-stream": "^1.0.1",
-    "into-stream": "^5.1.1",
-    "lodash": "^4.17.15",
+    "into-stream": "^6.0.0",
+    "lodash": "^4.17.20",
     "pumpify": "^2.0.1"
   },
   "devDependencies": {

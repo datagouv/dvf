@@ -88,13 +88,11 @@ function convertRow(row, {culturesMap, culturesSpecialesMap}) {
   return converted
 }
 
-const millesimes = ['2019', '2018', '2017', '2016', '2015', '2014']
-
 async function main() {
   const culturesMap = await getCulturesMap()
   const culturesSpecialesMap = await getCulturesSpecialesMap()
 
-  await bluebird.each(millesimes, async millesime => {
+  await bluebird.each(process.env.ANNEES.split(','), async millesime => {
     console.log(`Millésime ${millesime}`)
 
     console.log('Chargement des données')

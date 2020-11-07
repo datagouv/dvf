@@ -2,7 +2,7 @@
 /* eslint camelcase: off */
 require('dotenv').config()
 
-const {join} = require('path')
+const path = require('path')
 const {createReadStream} = require('fs')
 const {Transform} = require('stream')
 const bluebird = require('bluebird')
@@ -107,7 +107,7 @@ async function main() {
     let idMutationSeq = 0
 
     const rows = await getStream.array(pumpify(
-      createReadStream(join(__dirname, 'data', `valeursfoncieres-${millesime}.txt.gz`)),
+      createReadStream(path.join(__dirname, 'data', `valeursfoncieres-${millesime}.txt.gz`)),
       createGunzip(),
       csvParser({separator: '|'}),
       new Transform({objectMode: true, transform(row, enc, cb) {
@@ -160,9 +160,9 @@ async function main() {
     await bluebird.map(Object.keys(communesGroupedRows), async codeCommune => {
       const communeRows = communesGroupedRows[codeCommune]
       const codeDepartement = getCodeDepartement(codeCommune)
-      const departementPath = join(__dirname, 'dist', millesime, 'communes', codeDepartement)
+      const departementPath = path.join(__dirname, 'dist', millesime, 'communes', codeDepartement)
       await ensureDir(departementPath)
-      await writeCsv(join(departementPath, `${codeCommune}.csv`), communeRows)
+      await writeCsv(path.join(departementPath, `${codeCommune}.csv`), communeRows)
     }, {concurrency: 8})
 
     /* Export des données au département */
@@ -173,18 +173,18 @@ async function main() {
 
     await bluebird.map(Object.keys(departementsGroupedRows), async codeDepartement => {
       const departementRows = departementsGroupedRows[codeDepartement]
-      const departementsPath = join(__dirname, 'dist', millesime, 'departements')
+      const departementsPath = path.join(__dirname, 'dist', millesime, 'departements')
       await ensureDir(departementsPath)
-      await writeCsv(join(departementsPath, `${codeDepartement}.csv.gz`), departementRows)
+      await writeCsv(path.join(departementsPath, `${codeDepartement}.csv.gz`), departementRows)
     }, {concurrency: 8})
 
     /* Export des données complet */
 
     console.log('Export complet des données')
 
-    const millesimePath = join(__dirname, 'dist', millesime)
+    const millesimePath = path.join(__dirname, 'dist', millesime)
     await ensureDir(millesimePath)
-    await writeCsv(join(millesimePath, 'full.csv.gz'), rows)
+    await writeCsv(path.join(millesimePath, 'full.csv.gz'), rows)
   })
 }
 

@@ -27,13 +27,15 @@
     "pumpify": "^2.0.1"
   },
   "devDependencies": {
-    "xo": "^0.25.3"
+    "xo": "^0.34.2"
   },
   "xo": {
     "semicolon": false,
     "space": "2",
     "rules": {
-      "unicorn/prefer-string-slice": "off"
+      "unicorn/prefer-string-slice": "off",
+      "unicorn/no-reduce": "off",
+      "unicorn/no-fn-reference-in-iterator": "off"
     }
   },
   "engines": {

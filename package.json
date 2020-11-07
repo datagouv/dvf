@@ -21,6 +21,7 @@
     "dotenv": "^8.2.0",
     "fs-extra": "^9.0.1",
     "get-stream": "^6.0.0",
+    "got": "^11.8.0",
     "gunzip-stream": "^1.0.1",
     "into-stream": "^6.0.0",
     "lodash": "^4.17.20",

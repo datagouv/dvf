@@ -20,14 +20,11 @@ const {getDateMutation, getIdParcelle, getCodeCommune, getPrefixeSection, getCod
 const {getParcellesCommune} = require('./lib/parcelles')
 const {getCommune, getCommuneActuelle, getCodeDepartement, getCommuneFromCadastre} = require('./lib/recog')
 
-const DATE_ALIGNEMENT = '2019-01-01'
-const DATE_ALIGNEMENT_CADASTRE = '2019-01-01'
-
 function convertRow(row, {culturesMap, culturesSpecialesMap}) {
   const dateMutation = getDateMutation(row)
   const codeCommune = getCodeCommune(row)
   const commune = getCommune(codeCommune, dateMutation)
-  const communeActuelle = getCommuneActuelle(commune, DATE_ALIGNEMENT) || (console.log(`Probable dé-fusion : ${commune.nom}`) || commune)
+  const communeActuelle = getCommuneActuelle(commune, process.env.COG_MILLESIME) || (console.log(`Probable dé-fusion : ${commune.nom}`) || commune)
   const idParcelle = getIdParcelle(row)
 
   const converted = {
@@ -80,7 +77,7 @@ function convertRow(row, {culturesMap, culturesSpecialesMap}) {
 
   if (commune.code !== communeActuelle.code) {
     const ancienneCommune = getCommuneFromCadastre(codeCommune, getPrefixeSection(row))
-    const communeActuelleCadastre = getCommuneActuelle(ancienneCommune, DATE_ALIGNEMENT_CADASTRE)
+    const communeActuelleCadastre = getCommuneActuelle(ancienneCommune, process.env.CADASTRE_MILLESIME)
 
     if (commune.code !== communeActuelleCadastre.code) {
       converted.ancien_id_parcelle = idParcelle

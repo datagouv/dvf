@@ -24,7 +24,7 @@
     "got": "^11.8.0",
     "gunzip-stream": "^1.0.1",
     "into-stream": "^6.0.0",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "pumpify": "^2.0.1"
   },
   "devDependencies": {

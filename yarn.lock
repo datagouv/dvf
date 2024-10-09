@@ -1133,6 +1133,11 @@ decompress-response@^6.0.0:
   dependencies:
     mimic-response "^3.1.0"
 
+"decoupage-admin-2024@npm:@etalab/decoupage-administratif@4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@etalab/decoupage-administratif/-/decoupage-administratif-4.0.0.tgz#b5d048efc43a688312a42f6daa2bef93c0d2c63b"
+  integrity sha512-TMGZT4rFaQdkovoAZF5iMNJnxc2To8GXiC4x/N8Z5j6I0j29AeInE2Js86Wy9W2ZnjGFbKkSpmnsbLYwWYAFsw==
+
 deep-extend@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.6.0.tgz#c4fa7c95404a17a9c3e8ca7e1537312b736330ac"

@@ -18,6 +18,7 @@
     "bluebird": "^3.7.2",
     "csv-parser": "^2.3.3",
     "csv-write-stream": "^2.0.0",
+    "decoupage-admin-2024": "npm:@etalab/decoupage-administratif@4.0.0",
     "dotenv": "^8.2.0",
     "fs-extra": "^9.0.1",
     "get-stream": "^6.0.0",

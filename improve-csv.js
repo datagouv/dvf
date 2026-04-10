@@ -21,71 +21,100 @@ const {getParcellesCommune} = require('./lib/parcelles')
 const {getCommune, getCommuneActuelle, getCodeDepartement, getCommuneFromCadastre} = require('./lib/recog')
 
 function convertRow(row, {culturesMap, culturesSpecialesMap}) {
-  const dateMutation = getDateMutation(row)
-  const codeCommune = getCodeCommune(row)
-  const commune = getCommune(codeCommune, dateMutation)
-  const communeActuelle = getCommuneActuelle(commune, process.env.COG_MILLESIME) || (console.log(`Probable dé-fusion : ${commune.nom}`) || commune)
-  const idParcelle = getIdParcelle(row)
+    try {
+        const dateMutation = getDateMutation(row)
+        const codeCommune = getCodeCommune(row)
 
-  const converted = {
-    id_mutation: '',
-    date_mutation: dateMutation,
-    numero_disposition: row['No disposition'],
-    nature_mutation: row['Nature mutation'],
-    valeur_fonciere: parseFloat(row['Valeur fonciere']) || '',
-    adresse_numero: row['No voie'],
-    adresse_suffixe: row['B/T/Q'],
-    adresse_nom_voie: [row['Type de voie'], row.Voie].filter(Boolean).join(' '),
-    adresse_code_voie: row['Code voie'] ? row['Code voie'].padStart(4, '0') : '',
-    code_postal: getCodePostal(row) || '',
-    code_commune: communeActuelle.code,
-    nom_commune: communeActuelle.nom,
-    code_departement: getCodeDepartement(communeActuelle.code),
-    ancien_code_commune: '',
-    ancien_nom_commune: '',
-    id_parcelle: idParcelle,
-    ancien_id_parcelle: '',
-    numero_volume: row['No Volume'],
-    lot1_numero: row['1er lot'],
-    lot1_surface_carrez: parseFloat(row['Surface Carrez du 1er lot']) || '',
-    lot2_numero: row['2eme lot'],
-    lot2_surface_carrez: parseFloat(row['Surface Carrez du 2eme lot']) || '',
-    lot3_numero: row['3eme lot'],
-    lot3_surface_carrez: parseFloat(row['Surface Carrez du 3eme lot']) || '',
-    lot4_numero: row['4eme lot'],
-    lot4_surface_carrez: parseFloat(row['Surface Carrez du 4eme lot']) || '',
-    lot5_numero: row['5eme lot'],
-    lot5_surface_carrez: parseFloat(row['Surface Carrez du 5eme lot']) || '',
-    nombre_lots: row['Nombre de lots'],
-    code_type_local: row['Code type local'],
-    type_local: row['Type local'],
-    surface_reelle_bati: parseFloat(row['Surface reelle bati']) || '',
-    nombre_pieces_principales: row['Nombre pieces principales'],
-    code_nature_culture: row['Nature culture'],
-    nature_culture: row['Nature culture'] in culturesMap ? culturesMap[row['Nature culture']] : '',
-    code_nature_culture_speciale: row['Nature culture speciale'],
-    nature_culture_speciale: row['Nature culture speciale'] in culturesSpecialesMap ? culturesSpecialesMap[row['Nature culture speciale']] : '',
-    surface_terrain: parseFloat(row['Surface terrain']) || '',
-    longitude: '',
-    latitude: ''
-  }
+        if (!codeCommune || !dateMutation) return null
 
-  if (commune !== communeActuelle) {
-    converted.ancien_code_commune = commune.code
-    converted.ancien_nom_commune = commune.nom
-  }
+        const commune = getCommune(codeCommune, dateMutation)
 
-  if (commune.code !== communeActuelle.code) {
-    const ancienneCommune = getCommuneFromCadastre(codeCommune, getPrefixeSection(row))
-    const communeActuelleCadastre = getCommuneActuelle(ancienneCommune, process.env.CADASTRE_MILLESIME)
+        if (!commune) {
+            console.warn('Commune introuvable', codeCommune, dateMutation)
+            return null
+        }
 
-    if (commune.code !== communeActuelleCadastre.code) {
-      converted.ancien_id_parcelle = idParcelle
-      converted.id_parcelle = `${communeActuelle.code}${commune.code.substr(2, 3)}${idParcelle.substr(8)}`
+        let communeActuelle
+        try {
+            communeActuelle = getCommuneActuelle(commune, process.env.COG_MILLESIME)
+        } catch (e) {
+            console.warn('Erreur getCommuneActuelle', commune?.code)
+            return null
+        }
+
+        if (!communeActuelle) {
+            console.warn(`Probable dé-fusion : ${commune.nom}`)
+            communeActuelle = commune
+        }
+
+        const idParcelle = getIdParcelle(row)
+        if (!idParcelle) return null
+
+        const converted = {
+            id_mutation: '',
+            date_mutation: dateMutation,
+            numero_disposition: row['No disposition'],
+            nature_mutation: row['Nature mutation'],
+            valeur_fonciere: parseFloat(row['Valeur fonciere']) || '',
+            adresse_numero: row['No voie'],
+            adresse_suffixe: row['B/T/Q'],
+            adresse_nom_voie: [row['Type de voie'], row.Voie].filter(Boolean).join(' '),
+            adresse_code_voie: row['Code voie'] ? row['Code voie'].padStart(4, '0') : '',
+            code_postal: getCodePostal(row) || '',
+            code_commune: communeActuelle.code,
+            nom_commune: communeActuelle.nom,
+            code_departement: getCodeDepartement(communeActuelle.code),
+            ancien_code_commune: '',
+            ancien_nom_commune: '',
+            id_parcelle: idParcelle,
+            ancien_id_parcelle: '',
+            numero_volume: row['No Volume'],
+            lot1_numero: row['1er lot'],
+            lot1_surface_carrez: parseFloat(row['Surface Carrez du 1er lot']) || '',
+            lot2_numero: row['2eme lot'],
+            lot2_surface_carrez: parseFloat(row['Surface Carrez du 2eme lot']) || '',
+            lot3_numero: row['3eme lot'],
+            lot3_surface_carrez: parseFloat(row['Surface Carrez du 3eme lot']) || '',
+            lot4_numero: row['4eme lot'],
+            lot4_surface_carrez: parseFloat(row['Surface Carrez du 4eme lot']) || '',
+            lot5_numero: row['5eme lot'],
+            lot5_surface_carrez: parseFloat(row['Surface Carrez du 5eme lot']) || '',
+            nombre_lots: row['Nombre de lots'],
+            code_type_local: row['Code type local'],
+            type_local: row['Type local'],
+            surface_reelle_bati: parseFloat(row['Surface reelle bati']) || '',
+            nombre_pieces_principales: row['Nombre pieces principales'],
+            code_nature_culture: row['Nature culture'],
+            nature_culture: row['Nature culture'] in culturesMap ? culturesMap[row['Nature culture']] : '',
+            code_nature_culture_speciale: row['Nature culture speciale'],
+            nature_culture_speciale: row['Nature culture speciale'] in culturesSpecialesMap ? culturesSpecialesMap[row['Nature culture speciale']] : '',
+            surface_terrain: parseFloat(row['Surface terrain']) || '',
+            longitude: '',
+            latitude: ''
+        }
+
+        if (commune.code !== communeActuelle.code) {
+            converted.ancien_code_commune = commune.code
+            converted.ancien_nom_commune = commune.nom
+
+            try {
+                const ancienneCommune = getCommuneFromCadastre(codeCommune, getPrefixeSection(row))
+                const communeActuelleCadastre = getCommuneActuelle(ancienneCommune, process.env.CADASTRE_MILLESIME)
+
+                if (communeActuelleCadastre && commune.code !== communeActuelleCadastre.code) {
+                    converted.ancien_id_parcelle = idParcelle
+                    converted.id_parcelle = `${communeActuelle.code}${commune.code.substr(2, 3)}${idParcelle.substr(8)}`
+                }
+            } catch (e) {
+                // ignore erreurs cadastre
+            }
+        }
+
+        return converted
+    } catch (e) {
+        console.warn('Erreur convertRow', e.message)
+        return null
     }
-  }
-
-  return converted
 }
 
 async function main() {
@@ -105,19 +134,32 @@ async function main() {
       createReadStream(path.join(__dirname, 'data', `valeursfoncieres-${millesime}.txt.gz`)),
       createGunzip(),
       csvParser({separator: '|'}),
-      new Transform({objectMode: true, transform(row, enc, cb) {
-        const converted = convertRow(row, {culturesMap, culturesSpecialesMap})
+        new Transform({
+            objectMode: true,
+            transform(row, enc, cb) {
+                try {
+                    const converted = convertRow(row, {culturesMap, culturesSpecialesMap})
 
-        if (converted.valeur_fonciere !== valeurFonciere || converted.date_mutation !== dateMutation) {
-          idMutationSeq++
-          valeurFonciere = converted.valeur_fonciere
-          dateMutation = converted.date_mutation
-        }
+                    if (!converted) return cb() // skip ligne invalide
 
-        converted.id_mutation = `${millesime}-${idMutationSeq}`
+                    if (
+                        converted.valeur_fonciere !== valeurFonciere ||
+                        converted.date_mutation !== dateMutation
+                    ) {
+                        idMutationSeq++
+                        valeurFonciere = converted.valeur_fonciere
+                        dateMutation = converted.date_mutation
+                    }
 
-        cb(null, converted)
-      }})
+                    converted.id_mutation = `${millesime}-${idMutationSeq}`
+
+                    cb(null, converted)
+                } catch (e) {
+                    console.warn('Erreur transform', e.message)
+                    cb() // skip
+                }
+            }
+        })
     ))
 
     /* Géocodage à la parcelle */
@@ -136,8 +178,9 @@ async function main() {
             row.ancien_id_parcelle = undefined
           }
 
-          if (row.id_parcelle in parcelles) {
+            if (row.id_parcelle && parcelles && row.id_parcelle in parcelles) {
             const parcelle = parcelles[row.id_parcelle]
+            if (!parcelle) return
             const [lon, lat] = truncate(centroid(parcelle), {precision: 6}).geometry.coordinates
             row.longitude = lon
             row.latitude = lat
